@@ -1,0 +1,229 @@
+*{
+	margin: 0;
+	padding: 0;
+	/* 内减模式 */
+	box-sizing: border-box;
+}
+
+/* li标签去前面的小点 */
+li{
+	list-style: none;
+}
+
+/* 超链接去下划线 */
+a{
+	text-decoration: none;
+}
+
+/* 清除浮动影响，在li上级加 */
+.clearfix:before,.clearfix:after{
+	content: "";
+	display: table;
+}
+
+.clearfix:after{
+	clear: both;
+}
+
+
+/* body{
+	background-color: pink;
+} */
+
+/* 版心居中 */
+.wrapper{
+	width: 1000px;
+	margin: 0 auto;
+}
+
+/* 头部header------------------------ */
+.header{
+	height: 70px;
+	margin: 20px auto;
+}
+
+.toplogo{
+	text-align: center;
+}
+
+/* 导航------------------------------ */
+.navlong{
+	background-color: #89d5fa;
+}
+.nav{
+	height: 80px;
+	/* background-color: pink; */
+}
+
+.nav li{
+	float: left;
+}
+
+.nav li a{
+	display: block;
+	padding: 0 25px;
+	height: 80px;
+	line-height: 80px;
+	font-size: 24px;
+	color: #3d3d3d;
+}
+
+.nav li a:hover{
+	background-color: deepskyblue;
+	color: white;
+}
+
+/* 说明------------------------------ */
+
+.shuoming{
+	margin: 20px auto;
+	width: 1000px;
+	/* height: 60px; */
+	line-height: 20px;
+	/* background-color: pink; */
+	text-align: center;
+	color: #3d3d3d;
+	font-size: 14px;
+}
+
+span{
+	color: red;
+}
+
+
+/* 常用平台--------------------------------- */
+.kapian{
+	margin-top: 30px;
+	/* height: 100px; */
+	/* background-color: pink; */
+}
+
+.kapian li{
+	float: left;
+	margin-right: 13px;
+	margin-bottom: 13px;
+	width: 240px;
+	height: 250px;
+	background-color: #f2f4f5;
+}
+
+/* 清除3n右外边距 */
+.kapian li:nth-child(4n){
+	margin-right: 0;
+}
+
+.kapian a{
+	display: block;
+	/* width: 240px; */
+	/* height: 250px; */
+	/* background-color: pink; */
+	color: #3d3d3d;
+}
+
+.kapian a .zhutitu{
+	/* float: left; */
+	width: 240px;
+	height: 150px;
+	background-color: black;
+	/* border-radius: 10px; */
+}
+
+.kapian a h3{
+	padding: 10px;
+	text-align: center;
+	line-height: 18px;
+	font-size: 14px;
+	border-bottom: 1px dashed #d5d5d5;
+}
+
+.kapian a p{
+	padding: 10px 10px 0px;
+	line-height: 20px;
+	font-size: 12px;
+	color: #ababab;
+	/* border-top: 1px solid #bfbfbf; */
+	/* border-top: 1px dashed #bfbfbf; */
+}
+
+.kapian li:hover{
+	background-color: #d3efff;
+}
+
+.kapian a:hover{
+	color: blue;
+}
+
+
+/* 列表型卡片----------------- */
+.kapian .liebiaokpimg{
+	width: 240px;
+	height: 90px;
+	/* background-color: pink; */
+}
+.lbkp a:hover{
+	background-color: #ffdec0;
+}
+
+
+
+
+/* 版权-------------------------------- */
+.banquan{
+	margin-top: 10px;
+	padding: 10px;
+	/* height: 100px; */
+	background-color: #eceded;
+}
+
+.bqneirong{
+	text-align: center;
+	font-size: 14px;
+	line-height: 30px;
+	color: #8b8b8b;
+	/* background-color: green; */
+}
+
+.banquan a{
+	display: inline-block;
+	margin: 5px;
+	/* padding: 20px; */
+	width: 100px;
+	height: 30px;
+	color: #6a6a6a;
+	/* background-color: pink; */
+}
+
+.banquan a:hover{
+	color: red;
+}
+
+
+
+
+/* 悬浮小标--------------------- */
+
+.kapian li{
+	position: relative;
+}
+
+.kapian li .xiaobiao{
+	position: absolute;
+	top: 4px;
+	right: -4px;
+}
+
+
+
+/* 服务器内容页---------------- */
+iframe{
+	width: 998px;
+	height: 570px;
+	/* background-color: pink; */
+	border-radius: 10px;
+}
+.fwqhd{
+	border: 1px solid #828282;
+	border-radius: 10px;
+	text-align: center;
+}
+
