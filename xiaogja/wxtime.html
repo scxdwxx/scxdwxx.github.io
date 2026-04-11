@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五小专用时钟</title>
+    <style>
+        :root {
+            --scale-factor: 1;
+            --date-color: #00ff9d;
+            --time-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1a1a;
+            color: var(--time-color);
+            font-family: 'Arial', sans-serif;
+            transition: color 0.3s;
+        }
+
+        .title {
+            font-size: calc(3.3vw * var(--scale-factor));
+            margin-bottom: 4vh;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .date-container {
+            font-size: calc(4vw * var(--scale-factor));
+            margin-bottom: 2vh;
+            color: var(--date-color);
+        }
+
+        .time-container {
+            font-size: calc(10vw * var(--scale-factor));
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: #1d1d1d;
+            color: #3f3f3f;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--date-color);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: calc(5vw * var(--scale-factor));
+            }
+            .date-container {
+                font-size: calc(6vw * var(--scale-factor));
+            }
+            .time-container {
+                font-size: calc(12vw * var(--scale-factor));
+            }
+            .controls {
+                flex-wrap: wrap;
+                justify-content: center;
+                bottom: 10px;
+            }
+            button {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="time-container" id="time"></div>
+	<div class="date-container" id="date"></div>
+	<h1 class="title">石城县第五小学专用</h1>
+	<p style="color: gray;font-size: 30px;">scxdwxx.cn</p>
+    
+    <div class="controls">
+        <button onclick="adjustFontSize(0.9)">缩小字体</button>
+        <button onclick="adjustFontSize(1.1)">放大字体</button>
+        <button onclick="changeColorScheme()">切换配色</button>
+        <button onclick="toggleTimeFormat()" id="formatBtn">24小时制</button>
+    </div>
+
+
+    <script>
+        let scaleFactor = 1;
+        let is24Hour = true;
+        let colorIndex = 0;
+        const colorSchemes = [
+            { date: '#00ff9d', time: '#ffffff' },   // 默认
+            { date: '#ff4081', time: '#ffd700' },   // 粉色/金色
+            { date: '#00ffff', time: '#ff00ff' },   // 青色/品红
+            { date: '#7fff00', time: '#ff4500' }    // 黄绿/橙红
+        ];
+
+        function updateDateTime() {
+            const now = new Date();
+            
+            // 更新日期
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            document.getElementById('date').textContent = `${year}年${month}月${date}日`;
+
+            // 更新时间
+            let hours = now.getHours();
+            const ampm = hours >= 12 ? '' : '';
+            
+            if (!is24Hour) {
+                hours = hours % 12 || 12;
+            }
+
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('time').textContent = 
+                `${String(hours).padStart(2, '0')}:${minutes}:${seconds}${is24Hour ? '' : ' ' + ampm}`;
+
+            requestAnimationFrame(updateDateTime);
+        }
+
+        function adjustFontSize(factor) {
+            scaleFactor = Math.min(Math.max(scaleFactor * factor, 0.7), 1.5);
+            document.documentElement.style.setProperty('--scale-factor', scaleFactor);
+        }
+
+        function changeColorScheme() {
+            colorIndex = (colorIndex + 1) % colorSchemes.length;
+            const scheme = colorSchemes[colorIndex];
+            document.documentElement.style.setProperty('--date-color', scheme.date);
+            document.documentElement.style.setProperty('--time-color', scheme.time);
+        }
+
+        function toggleTimeFormat() {
+            is24Hour = !is24Hour;
+            document.getElementById('formatBtn').textContent = 
+                is24Hour ? '24小时制' : '12小时制';
+        }
+
+        // 初始调用
+        updateDateTime();
+    </script>
+	
+</body>
+</html>

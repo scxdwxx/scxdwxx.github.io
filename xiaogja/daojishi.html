@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>倒计时·黑体大数字 | 左右控时 默认循环响铃</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* 避免拖动/选中，提升操作感 */
+        }
+
+        body {
+            min-height: 100vh;
+            width: 100%;
+            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
+            padding: 1.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .timer-container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(22, 34, 48, 0.65);
+            backdrop-filter: blur(14px);
+            border-radius: 3rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            padding: 2rem 2rem 2.5rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .countdown-display {
+            text-align: center;
+            margin: 1rem 0 1.5rem 0;
+            padding: 0.5rem;
+        }
+
+        /* 倒计时数字字体改为黑体 */
+        #timer {
+            font-family: 'SimHei', 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', 'Segoe UI', system-ui, sans-serif;
+            font-weight: 800;
+            font-size: 15rem;
+            letter-spacing: 0.02em;
+            background: linear-gradient(135deg, #f0f9ff, #e0eefc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: #ffffff;
+            text-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: color 0.2s ease, font-size 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        /* 调整区域：左右布局（分钟在左，秒数在右，标签在数值左侧） */
+        .time-adjust-panel {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 1rem 0 1.5rem 0;
+            /* background: rgba(0, 0, 0, 0.3); */
+            /* padding: 1.2rem 1.8rem; */
+            border-radius: 3rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .adjust-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0,0,0,0.25);
+            padding: 0.2rem 1.2rem;
+            border-radius: 2rem;
+            min-width: 220px;
+        }
+
+        .adjust-group label {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #eef4ff;
+            letter-spacing: 1px;
+            background: rgba(0,0,0,0.4);
+            padding: 0.4rem 0.9rem;
+            border-radius: 2rem;
+            white-space: nowrap;
+        }
+
+        .value-control {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #0f1a1faa;
+            padding: 0.3rem 0.8rem;
+            border-radius: 3rem;
+        }
+
+        .value-number {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Fira Mono', monospace;
+            color: #f0f3fa;
+            min-width: 80px;
+            text-align: center;
+            background: #071016;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            letter-spacing: 2px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .step-btn {
+            background: #2f4b5c;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 3px 8px black;
+            border: none;
+            color: white;
+        }
+
+        .step-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* 主操作按钮组 */
+        .btn {
+            border: none;
+            background: #2c3e44;
+            color: white;
+            font-weight: 600;
+            padding: 0.8rem 1.8rem;
+            border-radius: 3rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #2b6e9e;
+            box-shadow: 0 6px 0 #134257;
+        }
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #134257;
+        }
+        .btn-danger {
+            background: #6d3b3b;
+            box-shadow: 0 5px 0 #3e2323;
+        }
+        .btn-danger:active {
+            transform: translateY(2px);
+        }
+        .btn-reset {
+            background: #5a6e7c;
+            box-shadow: 0 5px 0 #3a4854;
+        }
+        .btn-reset:active {
+            transform: translateY(2px);
+        }
+        .btn-sound-stop {
+            background: #a5582c;
+            box-shadow: 0 5px 0 #6e3a1a;
+        }
+        .btn-sound-stop:active {
+            transform: translateY(2px);
+        }
+        .btn:hover {
+            filter: brightness(1.05);
+            background: #3d6b81;
+        }
+
+        .action-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.2rem 0 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* 快捷设置按钮网格 */
+        .shortcuts-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.9rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .shortcut-btn {
+            background: #1f3b45;
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            min-width: 80px;
+            font-weight: 600;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+        .shortcut-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* 样式工具条 + 声音控制 */
+        .style-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 1.2rem;
+            padding-top: 1.2rem;
+            border-top: 1px dashed rgba(255,255,255,0.3);
+            align-items: center;
+        }
+        .font-control, .color-control, .sound-option {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0.5rem 1.2rem;
+            border-radius: 3rem;
+            backdrop-filter: blur(4px);
+        }
+        .font-control span, .color-control span, .sound-option span {
+            color: #eef4ff;
+            font-weight: 500;
+        }
+        .icon-btn {
+            background: #2f4b5c;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 2px 6px black;
+        }
+        .icon-btn:active {
+            transform: scale(0.94);
+        }
+        input[type="color"] {
+            width: 48px;
+            height: 48px;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            background: transparent;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .loop-check {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #4c9aff;
+            transform: scale(1.1);
+            margin-left: 4px;
+        }
+
+        @media (max-width: 680px) {
+            .timer-container { padding: 1.2rem; }
+            #timer { font-size: 4rem; }
+            .value-number { font-size: 1.6rem; min-width: 70px; }
+            .step-btn { width: 42px; height: 42px; font-size: 1.5rem; }
+            .btn { padding: 0.6rem 1.2rem; }
+            .shortcut-btn { min-width: 70px; padding: 0.5rem 0.9rem; }
+            .adjust-group { gap: 0.8rem; min-width: 180px; }
+            .adjust-group label { font-size: 1.2rem; }
+        }
+        @media (max-width: 480px) {
+            #timer { font-size: 3rem; }
+            .value-number { font-size: 1.3rem; min-width: 60px; }
+            .step-btn { width: 38px; height: 38px; font-size: 1.3rem; }
+            .adjust-group { gap: 0.5rem; padding: 0.4rem 0.8rem; }
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0e1c24e6;
+            backdrop-filter: blur(12px);
+            color: #bbf0ff;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 500;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: 0.9rem;
+            border-left: 4px solid #4c9aff;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 1.2rem;
+            opacity: 0.6;
+            color: #bdd4e2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="timer-container">
+	<p style="color: white;text-align: center;font-size: 20px;">石城县第五小学 专用倒计时工具 <span style="color: #2e6b93;font-size: 28px;"> scxdwxx.cn</span></p>
+    <!-- 倒计时显示区 -->
+    <div class="countdown-display">
+        <div id="timer">00:00</div>
+    </div>
+
+    <!-- 自由调整分/秒区域：左右布局（分钟左侧，秒数右侧，标签在数值左侧） -->
+    <div class="time-adjust-panel">
+        <div class="adjust-group">
+            <label>分钟</label>
+            <div class="value-control">
+                <button class="step-btn" id="minMinusBtn" title="减少1分钟">−</button>
+                <div class="value-number" id="minValue">0</div>
+                <button class="step-btn" id="minPlusBtn" title="增加1分钟">+</button>
+            </div>
+        </div>
+        <div class="adjust-group">
+            <label>秒数</label>
+            <div class="value-control">
+                <button class="step-btn" id="secMinusBtn" title="减少1秒">−</button>
+                <div class="value-number" id="secValue">0</div>
+                <button class="step-btn" id="secPlusBtn" title="增加1秒">+</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主操作按钮组 (开始/停止/重置 + 停止响铃) -->
+    <div class="action-group">
+        <button id="startBtn" class="btn btn-primary">▶ 开始倒计时</button>
+        <button id="stopBtn" class="btn btn-danger">⏹️ 停止</button>
+        <button id="resetBtn" class="btn btn-reset">🔄 重置</button>
+        <button id="stopSoundBtn" class="btn btn-sound-stop">🔇 停止响铃</button>
+    </div>
+
+    <!-- 快捷设置按钮组 (30秒 + 1~60分钟) -->
+    <div class="shortcuts-grid" id="shortcutsGroup">
+        <button data-seconds="30" class="btn shortcut-btn">30秒</button>
+        <button data-minutes="1" class="btn shortcut-btn">1分钟</button>
+        <button data-minutes="2" class="btn shortcut-btn">2分钟</button>
+        <button data-minutes="3" class="btn shortcut-btn">3分钟</button>
+        <button data-minutes="5" class="btn shortcut-btn">5分钟</button>
+        <button data-minutes="10" class="btn shortcut-btn">10分钟</button>
+        <button data-minutes="20" class="btn shortcut-btn">20分钟</button>
+        <button data-minutes="30" class="btn shortcut-btn">30分钟</button>
+        <!-- <button data-minutes="60" class="btn shortcut-btn">60分钟</button> -->
+    </div>
+
+    <!-- 样式工具栏 + 循环响铃选项 (默认勾选) -->
+    <div class="style-toolbar">
+        <div class="font-control">
+            <span>🔠 字体大小</span>
+            <div id="fontPlusBtn" class="icon-btn" title="增大字号">A+</div>
+            <div id="fontMinusBtn" class="icon-btn" title="减小字号">A-</div>
+        </div>
+        <div class="color-control">
+            <span>🎨 数字颜色</span>
+            <input type="color" id="textColorPicker" value="#ffffff">
+        </div>
+        <div class="color-control">
+            <span>🖌️ 背景颜色</span>
+            <input type="color" id="bgColorPicker" value="#1a2a3a">
+        </div>
+        <div class="sound-option">
+            <span>🔊 循环响铃</span>
+            <input type="checkbox" id="loopSoundCheckbox" class="loop-check" checked>
+			<!-- checked 为勾选，删除为不勾选。 -->
+        </div>
+    </div>
+    <!-- <footer>✨ 加减调节时间 | 倒计时结束播放3秒长音，可循环 | 独立「停止响铃」按钮 ✨</footer> -->
+	<footer>Copyright © 2026-<span id="year"></span> Mr.King All Rights Reserved.</footer>
+	<script>year.textContent=new Date().getFullYear()</script>
+</div>
+
+<script>
+    (function() {
+        // ----- DOM 元素 -----
+        const timerDisplay = document.getElementById('timer');
+        const minValueSpan = document.getElementById('minValue');
+        const secValueSpan = document.getElementById('secValue');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const stopSoundBtn = document.getElementById('stopSoundBtn');
+        const shortcuts = document.querySelectorAll('[data-minutes], [data-seconds]');
+        const fontPlus = document.getElementById('fontPlusBtn');
+        const fontMinus = document.getElementById('fontMinusBtn');
+        const textColorPicker = document.getElementById('textColorPicker');
+        const bgColorPicker = document.getElementById('bgColorPicker');
+        const loopSoundCheckbox = document.getElementById('loopSoundCheckbox');
+        
+        // 加减按钮
+        const minPlusBtn = document.getElementById('minPlusBtn');
+        const minMinusBtn = document.getElementById('minMinusBtn');
+        const secPlusBtn = document.getElementById('secPlusBtn');
+        const secMinusBtn = document.getElementById('secMinusBtn');
+
+        // ----- 内部状态 -----
+        let currentMinutes = 0;
+        let currentSeconds = 0;
+        let countdownInterval = null;
+        let isRunning = false;
+        let soundLoopInterval = null;     // 循环响铃定时器
+        
+        // 辅助: 轻提示
+        function showMessage(msg, isError = false) {
+            let toast = document.querySelector('.toast-msg');
+            if (toast) toast.remove();
+            const div = document.createElement('div');
+            div.className = 'toast-msg';
+            div.innerText = msg;
+            if (isError) div.style.borderLeftColor = '#ff8a7a';
+            else div.style.borderLeftColor = '#6fcf97';
+            document.body.appendChild(div);
+            setTimeout(() => {
+                if(div && div.remove) div.remove();
+            }, 2000);
+        }
+        
+        // 同步UI：更新上方数值显示 + 大倒计时显示
+        function syncUIFromState() {
+            minValueSpan.innerText = currentMinutes;
+            secValueSpan.innerText = currentSeconds < 10 ? `0${currentSeconds}` : currentSeconds;
+            const formatted = `${String(currentMinutes).padStart(2, '0')}:${String(currentSeconds).padStart(2, '0')}`;
+            timerDisplay.innerText = formatted;
+        }
+        
+        // 设置时间 (分钟, 秒) 并停止计时, 同步状态
+        function setTimeAndStop(minutes, seconds) {
+            if (isRunning) stopTimerInternal(true);
+            stopSoundLoopInternal(); // 修改时间时停止任何响铃循环
+            currentMinutes = Math.min(599, Math.max(0, minutes));
+            currentSeconds = Math.min(59, Math.max(0, seconds));
+            syncUIFromState();
+        }
+        
+        // 内部停止倒计时
+        function stopTimerInternal(resetRunningFlag = true) {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            if (resetRunningFlag) isRunning = false;
+        }
+        
+        // 停止循环响铃 (独立)
+        function stopSoundLoopInternal() {
+            if (soundLoopInterval) {
+                clearInterval(soundLoopInterval);
+                soundLoopInterval = null;
+            }
+        }
+        
+        // ----- 声音模块: 3秒长提示音 (非循环单次) -----
+        function playLongBeep() {
+            try {
+                const AudioContextFunc = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextFunc) return;
+                const audioCtx = new AudioContextFunc();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.frequency.value = 880;
+                gainNode.gain.value = 0.4;
+                oscillator.start();
+                const now = audioCtx.currentTime;
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 2.9);
+                oscillator.stop(now + 3.0);
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().catch(e => console.log);
+                }
+                setTimeout(() => {
+                    audioCtx.close().catch(()=>{});
+                }, 3500);
+            } catch(e) { console.warn("音效错误", e); }
+        }
+        
+        // 开始循环响铃 (每1秒一次3秒长音)
+        function startSoundLoop() {
+            stopSoundLoopInternal();
+            playLongBeep(); // 立即响一次
+            soundLoopInterval = setInterval(() => {
+                playLongBeep();
+            }, 1000);
+        }
+        
+        // 倒计时结束时的行为: 播放长提示音 + 如果循环选项开启则启动循环
+        function onCountdownFinish() {
+            playLongBeep();  // 先响一次
+            if (loopSoundCheckbox.checked) {
+                startSoundLoop();
+                showMessage("🔔 倒计时结束，循环提示音已开启 (点击「停止响铃」可关闭)", false);
+            } else {
+                showMessage("🎉 倒计时结束！时间到啦 🎉", false);
+            }
+            if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(200);
+        }
+        
+        // 停止响铃 (外部按钮调用)
+        function stopSoundAndLoop() {
+            stopSoundLoopInternal();
+            showMessage("🔇 已停止所有响铃", false);
+        }
+        
+        // 开始倒计时逻辑
+        function startCountdown() {
+            // 开始前先停止所有循环响铃
+            stopSoundLoopInternal();
+            
+            let totalSeconds = currentMinutes * 60 + currentSeconds;
+            if (totalSeconds <= 0) {
+                showMessage("⏰ 请设置大于0的时间再开始倒计时！", true);
+                return false;
+            }
+            // 停止之前的倒计时
+            if (countdownInterval) clearInterval(countdownInterval);
+            isRunning = true;
+            let remaining = totalSeconds;
+            
+            const updateTimer = (remainSec) => {
+                const mins = Math.floor(remainSec / 60);
+                const secs = remainSec % 60;
+                currentMinutes = mins;
+                currentSeconds = secs;
+                syncUIFromState();
+            };
+            
+            updateTimer(remaining);
+            
+            countdownInterval = setInterval(() => {
+                if (!isRunning) {
+                    if (countdownInterval) clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    return;
+                }
+                if (remaining <= 1) {
+                    remaining = 0;
+                    updateTimer(0);
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    isRunning = false;
+                    onCountdownFinish();   // 结束并播放音效/循环
+                } else {
+                    remaining--;
+                    updateTimer(remaining);
+                }
+            }, 1000);
+            return true;
+        }
+        
+        // 重置倒计时 (归零)
+        function resetCountdown() {
+            if (isRunning) stopTimerInternal(true);
+            stopSoundLoopInternal();
+            currentMinutes = 0;
+            currentSeconds = 0;
+            syncUIFromState();
+            showMessage("🔄 倒计时已重置为 00:00", false);
+        }
+        
+        // 停止倒计时 (仅停止计时，不重置数值)
+        function stopCountdown() {
+            if (isRunning) {
+                stopTimerInternal(true);
+                showMessage("⏹️ 倒计时已停止", false);
+            } else {
+                showMessage("倒计时未运行", false);
+            }
+        }
+        
+        // 调整分钟 (delta = +1/-1)
+        function adjustMinutes(delta) {
+            if (isRunning) stopTimerInternal(true);
+            let newMin = currentMinutes + delta;
+            if (newMin < 0) newMin = 0;
+            if (newMin > 599) newMin = 599;
+            currentMinutes = newMin;
+            syncUIFromState();
+        }
+        
+        // 调整秒数 (带进位/借位)
+        function adjustSeconds(delta) {
+            if (isRunning) stopTimerInternal(true);
+            let newSec = currentSeconds + delta;
+            if (newSec > 59) {
+                // 进位分钟
+                let newMin = currentMinutes + 1;
+                if (newMin > 599) newMin = 599;
+                currentMinutes = newMin;
+                newSec = newSec - 60;
+            } else if (newSec < 0) {
+                if (currentMinutes > 0) {
+                    currentMinutes -= 1;
+                    newSec = 59;
+                } else {
+                    newSec = 0;
+                }
+            }
+            if (newSec < 0) newSec = 0;
+            if (newSec > 59) newSec = 59;
+            currentSeconds = newSec;
+            syncUIFromState();
+        }
+        
+        // ----- 快捷设置 (支持分钟 或 30秒) -----
+        function applyShortcut(minutes = null, seconds = null) {
+            if (isRunning) stopTimerInternal(true);
+            stopSoundLoopInternal();
+            if (minutes !== null) {
+                currentMinutes = Math.min(599, Math.max(0, minutes));
+                currentSeconds = 0;
+            } else if (seconds !== null) {
+                currentMinutes = 0;
+                currentSeconds = Math.min(59, Math.max(0, seconds));
+            }
+            syncUIFromState();
+            const msg = minutes !== null ? `${minutes}分钟` : `${seconds}秒`;
+            showMessage(`⏲️ 已设置 ${msg}`, false);
+        }
+        
+        // ----- 事件绑定 -----
+        minPlusBtn.addEventListener('click', () => adjustMinutes(1));
+        minMinusBtn.addEventListener('click', () => adjustMinutes(-1));
+        secPlusBtn.addEventListener('click', () => adjustSeconds(1));
+        secMinusBtn.addEventListener('click', () => adjustSeconds(-1));
+        
+        startBtn.addEventListener('click', () => {
+            if (isRunning) {
+                stopTimerInternal(true);
+                stopSoundLoopInternal();
+            }
+            startCountdown();
+        });
+        stopBtn.addEventListener('click', stopCountdown);
+        resetBtn.addEventListener('click', resetCountdown);
+        stopSoundBtn.addEventListener('click', stopSoundAndLoop);
+        
+        shortcuts.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const minutesVal = btn.getAttribute('data-minutes');
+                const secondsVal = btn.getAttribute('data-seconds');
+                if (minutesVal !== null) {
+                    applyShortcut(parseInt(minutesVal, 10), null);
+                } else if (secondsVal !== null) {
+                    applyShortcut(null, parseInt(secondsVal, 10));
+                }
+            });
+        });
+        
+        // ----- 字体大小调整 (黑体依然适用)-----
+        let currentFontSize = 8;
+        function adjustFontSize(delta) {
+            let newSize = currentFontSize + delta;
+            if (newSize < 5) newSize = 5;
+            if (newSize > 20) newSize = 20;
+            currentFontSize = newSize;
+            timerDisplay.style.fontSize = `${currentFontSize}rem`;
+        }
+        const initFont = (() => {
+            const comp = window.getComputedStyle(timerDisplay).fontSize;
+            const remBase = parseFloat(comp) / parseFloat(getComputedStyle(document.documentElement).fontSize);
+            currentFontSize = (isNaN(remBase) || remBase < 2) ? 8 : remBase;
+            timerDisplay.style.fontSize = `${currentFontSize}rem`;
+        })();
+        fontPlus.addEventListener('click', () => adjustFontSize(0.8));
+        fontMinus.addEventListener('click', () => adjustFontSize(-0.8));
+        
+        // 颜色调整
+        textColorPicker.addEventListener('input', (e) => {
+            timerDisplay.style.color = e.target.value;
+            timerDisplay.style.background = 'none';
+            timerDisplay.style.webkitBackgroundClip = 'unset';
+        });
+        bgColorPicker.addEventListener('input', (e) => {
+            document.body.style.background = e.target.value;
+        });
+        document.body.style.background = bgColorPicker.value;
+        
+        // 初始化状态
+        currentMinutes = 0;
+        currentSeconds = 0;
+        syncUIFromState();
+        
+        // 页面关闭清理定时器
+        window.addEventListener('beforeunload', () => {
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (soundLoopInterval) clearInterval(soundLoopInterval);
+        });
+        
+        console.log("✅ 最终版倒计时 | 黑体大字 | 左右控时 | 循环响铃默认勾选");
+    })();
+</script>
+</body>
+</html>
