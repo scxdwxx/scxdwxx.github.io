@@ -1,0 +1,290 @@
+*{
+	margin: 0;
+	padding: 0;
+	/* 内减模式 */
+	box-sizing: border-box;
+}
+
+/* li标签去前面的小点 */
+li{
+	list-style: none;
+}
+
+/* 超链接去下划线 */
+a{
+	text-decoration: none;
+}
+
+/* 清除浮动影响，在li上级加 */
+.clearfix:before,.clearfix:after{
+	content: "";
+	display: table;
+}
+
+.clearfix:after{
+	clear: both;
+}
+
+
+/* body{
+	background-color: pink;
+} */
+
+/* 版心居中 */
+.wrapper{
+	width: 1000px;
+	margin: 0 auto;
+}
+
+/* 头部header------------------------ */
+.header{
+	height: 70px;
+	margin: 20px auto;
+}
+
+.toplogo{
+	text-align: center;
+}
+
+/* 导航------------------------------ */
+.navlong{
+	background-color: #89d5fa;
+}
+.nav{
+	height: 80px;
+	/* background-color: pink; */
+}
+
+.nav li{
+	float: left;
+}
+
+.nav li a{
+	display: block;
+	padding: 0 25px;
+	height: 80px;
+	line-height: 80px;
+	font-size: 24px;
+	color: #3d3d3d;
+}
+
+.nav li a:hover{
+	background-color: deepskyblue;
+	color: white;
+}
+
+
+/* 百度搜索框---------------------------- */
+
+.baiduss{
+	margin: 40px auto;
+	height: 90px;
+	padding-left: 30px;
+	/* background-color: pink; */
+}
+
+.baiduss .sousuologo{
+	float: left;
+	margin: 8px 20px;
+	width: 200px;
+	height: 50px;
+}
+
+.baiduss img{
+	width: 200px;
+}
+
+/* 可公用 */
+.sousuokuan{
+	float: left;
+	margin-top: 20px;
+	width: 500px;
+	height: 50px;
+	text-align: center;
+	line-height: 48px;
+}
+
+.baiduss input{
+	width: 500px;
+	height: 50px;
+	border: 2;
+	border-radius: 5px;
+	border-color: #4e6ef2 ;
+	padding: 10px;
+	font-size: 18px;
+}
+
+/* 可公用 */
+.sousuoanniu{
+	float: left;
+	margin: 20px;
+	width: 130px;
+	height: 50px;
+}
+
+.baiduss button{
+	width: 130px;
+	height: 50px;
+	background-color: #4e6ef2;
+	color: #fff;
+	font-size: 18px;
+	border: 0;
+	border-radius: 10px;
+}
+
+/* Bing搜索框---------------------------- */
+
+.bingss{
+	margin: 40px auto;
+	height: 90px;
+	padding-left: 30px;
+	/* background-color: pink; */
+}
+
+.bingss .sousuologo{
+	float: left;
+	margin: 30px 20px;
+	width: 200px;
+	height: 50px;
+}
+
+.bingss img{
+	width: 200px;
+}
+
+.bingss input{
+	width: 500px;
+	height: 50px;
+	border-radius: 5px;
+	border: 2;
+	border-color: #b0aeaa ;
+	padding: 10px;
+	font-size: 18px;
+}
+
+.bingss button{
+	width: 130px;
+	height: 50px;
+	background-color: #fff;
+	color: #3d3d3d;
+	font-size: 18px;
+	border: 2;
+	border-color: #b0aeaa;
+	border-radius: 25px;
+}
+
+
+/* 360搜索框---------------------------- */
+
+.ss360ss{
+	margin: 40px auto;
+	height: 90px;
+	padding-left: 30px;
+	/* background-color: pink; */
+}
+
+.ss360ss .sousuologo{
+	float: left;
+	margin: 25px 20px;
+	width: 200px;
+	height: 50px;
+}
+
+.ss360ss img{
+	width: 200px;
+}
+
+.ss360ss input{
+	width: 500px;
+	height: 50px;
+	border-radius: 5px;
+	border: 2;
+	border-color: #0fb264 ;
+	padding: 10px;
+	font-size: 18px;
+}
+
+.ss360ss button{
+	width: 130px;
+	height: 50px;
+	background-color: #0fb264;
+	color: #fff;
+	font-size: 18px;
+	border: 0;
+	border-radius: 10px;
+}
+
+/* 搜狗搜索框---------------------------- */
+
+.sougouss{
+	margin: 40px auto;
+	height: 90px;
+	padding-left: 30px;
+	/* background-color: pink; */
+}
+
+.sougouss .sousuologo{
+	float: left;
+	margin: 20px 20px;
+	width: 200px;
+	height: 50px;
+}
+
+.sougouss img{
+	width: 200px;
+}
+
+.sougouss input{
+	width: 500px;
+	height: 50px;
+	border-radius: 5px;
+	/* border: 2; */
+	/* border-color: #b0aeaa ; */
+	border: 1px solid #b0aeaa;
+	padding: 10px;
+	font-size: 18px;
+}
+
+.sougouss button{
+	width: 130px;
+	height: 50px;
+	background-color: #fff;
+	color: #3d3d3d;
+	font-size: 18px;
+	/* border: 1; */
+	border-radius: 5px;
+	border: 1px solid #b0aeaa;
+}
+
+
+
+
+/* 版权-------------------------------- */
+.banquan{
+	margin-top: 70px;
+	padding: 10px;
+	/* height: 100px; */
+	background-color: #eceded;
+}
+
+.bqneirong{
+	text-align: center;
+	font-size: 14px;
+	line-height: 30px;
+	color: #8b8b8b;
+	/* background-color: green; */
+}
+
+.banquan a{
+	display: inline-block;
+	margin: 5px;
+	/* padding: 20px; */
+	width: 100px;
+	height: 30px;
+	color: #6a6a6a;
+	/* background-color: pink; */
+}
+
+.banquan a:hover{
+	color: red;
+}

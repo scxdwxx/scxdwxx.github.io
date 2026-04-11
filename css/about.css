@@ -1,0 +1,149 @@
+*{
+	margin: 0;
+	padding: 0;
+	/* 内减模式 */
+	box-sizing: border-box;
+}
+
+/* li标签去前面的小点 */
+li{
+	list-style: none;
+}
+
+/* 超链接去下划线 */
+a{
+	text-decoration: none;
+}
+
+/* 清除浮动影响，在li上级加 */
+.clearfix:before,.clearfix:after{
+	content: "";
+	display: table;
+}
+
+.clearfix:after{
+	clear: both;
+}
+
+
+/* body{
+	background-color: pink;
+} */
+
+/* 版心居中 */
+.wrapper{
+	width: 1000px;
+	margin: 0 auto;
+}
+
+/* 头部header------------------------ */
+.header{
+	height: 70px;
+	margin: 20px auto;
+}
+
+.toplogo{
+	text-align: center;
+}
+
+/* 导航------------------------------ */
+.navlong{
+	background-color: #89d5fa;
+}
+.nav{
+	height: 80px;
+	/* background-color: pink; */
+}
+
+.nav li{
+	float: left;
+}
+
+.nav li a{
+	display: block;
+	padding: 0 25px;
+	height: 80px;
+	line-height: 80px;
+	font-size: 24px;
+	color: #3d3d3d;
+}
+
+.nav li a:hover{
+	background-color: deepskyblue;
+	color: white;
+}
+
+
+
+
+.dbox{
+	width: 1000px;
+	/* height: 650px; */
+	/* background-color: pink; */
+}
+
+.dboxl{
+	float: left;
+	padding: 20px;
+	width: 750px;
+	text-align: left;
+	text-indent: 2em;
+	font-size: 18px;
+	line-height: 40px;
+	color: #3d3d3d;
+	/* background-color: gray; */
+}
+
+.dboxl h4{
+	text-indent: 0;
+}
+
+.dboxr{
+	float: left;
+	padding: 20px;
+	width: 250px;
+	font-size: 14px;
+	text-indent: 2em;
+	line-height: 24px;
+	color: #3d3d3d;
+	/* background-color: green; */
+}
+
+.dboxr a{
+	color: deepskyblue;
+}
+
+.dboxr a:hover{
+	color: orange;
+}
+
+
+/* 版权-------------------------------- */
+.banquan{
+	margin-top: 10px;
+	padding: 10px;
+	/* height: 100px; */
+	background-color: #eceded;
+}
+
+.bqneirong{
+	text-align: center;
+	font-size: 14px;
+	line-height: 30px;
+	color: #8b8b8b;
+	/* background-color: green; */
+}
+
+.banquan a{
+	display: inline-block;
+	margin: 5px;
+	/* padding: 20px; */
+	width: 100px;
+	height: 30px;
+	color: #6a6a6a;
+	/* background-color: pink; */
+}
+
+.banquan a:hover{
+	color: red;
+}
