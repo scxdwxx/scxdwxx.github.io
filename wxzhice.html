@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>综合素质测评 · 科目导航台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', system-ui, -apple-system, sans-serif;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        /* 主容器 */
+        .portal {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.4);
+            border-radius: 3rem;
+            backdrop-filter: blur(2px);
+            padding: 2rem 1.8rem 2.5rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+        }
+
+        /* 页眉区域 */
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1F2B4E, #2C3F6E);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hero h1:before {
+            content: "📋";
+            font-size: 2rem;
+            background: none;
+            -webkit-background-clip: unset;
+            color: #2c3e66;
+        }
+        .hero p {
+            color: #4a5b7a;
+            font-size: 1.05rem;
+            margin-top: 0.75rem;
+            border-top: 2px solid rgba(100, 120, 150, 0.2);
+            display: inline-block;
+            padding-top: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* 网格卡片布局 */
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.6rem;
+            margin: 2rem 0 1rem;
+        }
+
+        /* 卡片按钮样式 (a标签模拟为饱满按钮) */
+        .test-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 1.2rem 1.5rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+            border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(2px);
+            cursor: pointer;
+        }
+
+        /* 卡片左侧内容区 */
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .subject-name {
+            font-size: 1.45rem;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            color: #1f2a44;
+        }
+        .subject-name span:first-child {
+            font-size: 1.8rem;
+        }
+        .duration {
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: #eef3fc;
+            display: inline-block;
+            width: fit-content;
+            padding: 4px 12px;
+            border-radius: 40px;
+            color: #2c5282;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(2px);
+            box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.02);
+        }
+        /* 右侧箭头 */
+        .arrow-icon {
+            font-size: 1.8rem;
+            opacity: 0.65;
+            transition: transform 0.2s ease, opacity 0.2s;
+            color: #4a6a8b;
+        }
+
+        /* 悬停 & 交互效果 */
+        .test-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 28px -12px rgba(30, 45, 70, 0.25);
+            background: #ffffff;
+            border-color: #cddbe9;
+        }
+        .test-card:hover .arrow-icon {
+            transform: translateX(6px);
+            opacity: 1;
+            color: #1f6392;
+        }
+        .test-card:active {
+            transform: translateY(-2px);
+            transition: 0.05s;
+        }
+
+        /* 不同科目微色彩 (可选小点缀, 保持干净但增加识别) */
+        /* 每个卡片都有细微差别但不影响可读性，仅利用背景色感 */
+        /* 增加辅助说明区域 */
+        .info-footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #5f6f8a;
+            background: #eef2f7;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0.6rem 1.6rem;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            font-weight: 450;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .info-footer span {
+            font-size: 1rem;
+        }
+
+        /* 确保移动端舒适 */
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            .portal {
+                padding: 1.5rem 1rem;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .test-grid {
+                gap: 1.2rem;
+                grid-template-columns: 1fr;
+            }
+            .test-card {
+                padding: 1rem 1.3rem;
+            }
+            .subject-name {
+                font-size: 1.3rem;
+            }
+            .arrow-icon {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Focus 样式帮助键盘导航 */
+        .test-card:focus-visible {
+            outline: 3px solid #2c7da0;
+            outline-offset: 3px;
+            border-radius: 2rem;
+        }
+
+        /* 模拟按钮细节增强 */
+        .test-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .test-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,245,0.4), transparent 80%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .test-card:hover::after {
+            opacity: 1;
+        }
+
+        /* 温馨提示装饰 */
+        .badge-light {
+            background: #ffffffcc;
+            border-radius: 30px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<div class="portal">
+    <div class="hero">
+        <h1>
+            <span>📚 智慧成长 · 综合素养练习</span>
+        </h1>
+        <p>✅ 点击任意科目卡片，立即开始在线测评 | 每科均有时长建议</p>
+    </div>
+
+    <!-- 所有科目按钮卡片 (直接链接，新标签页打开) 
+         严格按照题目提供的八个链接，完整保留#及原始地址 -->
+    <div class="test-grid">
+		
+		
+		<!-- 5. 音乐（30分钟） 无# 原始地址干净 -->
+		<a href="https://ks.wjx.com/vm/eo1Rcn3.aspx" target="_blank" rel="noopener noreferrer" class="test-card">
+		    <div class="card-info">
+		        <div class="subject-name">
+		            <span>🎵</span> 音乐
+		        </div>
+		        <div class="duration">⏱️ 30分钟 · 韵律之美</div>
+		    </div>
+		    <div class="arrow-icon">➡️</div>
+		</a>
+		
+		<!-- 3. 英语（25分钟） 保留# 注意原始链接带# -->
+		<a href="https://ks.wjx.com/vm/YDmEgEp.aspx#" target="_blank" rel="noopener noreferrer" class="test-card">
+		    <div class="card-info">
+		        <div class="subject-name">
+		            <span>🔤</span> 英语
+		        </div>
+		        <div class="duration">⏱️ 25分钟 · 语言积累</div>
+		    </div>
+		    <div class="arrow-icon">➡️</div>
+		</a>
+		
+		
+		
+        <!-- 1. 语文（30分钟） 链接无# -->
+        <a href="https://ks.wjx.com/vm/Qc8w1V5.aspx" target="_blank" rel="noopener noreferrer" class="test-card">
+            <div class="card-info">
+                <div class="subject-name">
+                    <span>📖</span> 语文
+                </div>
+                <div class="duration">⏱️ 30分钟 · 厚积薄发</div>
+            </div>
+            <div class="arrow-icon">➡️</div>
+        </a>
+
+        <!-- 2. 数学（30分钟） 保留尾随# -->
+        <a href="https://ks.wjx.com/vm/mHfySms.aspx#" target="_blank" rel="noopener noreferrer" class="test-card">
+            <div class="card-info">
+                <div class="subject-name">
+                    <span>🧮</span> 数学
+                </div>
+                <div class="duration">⏱️ 30分钟 · 思维挑战</div>
+            </div>
+            <div class="arrow-icon">➡️</div>
+        </a>
+
+
+        <!-- 4. 科学（20分钟） 保留# -->
+        <a href="https://ks.wjx.com/vm/hhxL9lI.aspx#" target="_blank" rel="noopener noreferrer" class="test-card">
+            <div class="card-info">
+                <div class="subject-name">
+                    <span>🔬</span> 科学
+                </div>
+                <div class="duration">⏱️ 20分钟 · 探索真知</div>
+            </div>
+            <div class="arrow-icon">➡️</div>
+        </a>
+
+
+
+        <!-- 6. 美术（20分钟） 保留# -->
+        <a href="https://ks.wjx.com/vm/Y6EJOM8.aspx#" target="_blank" rel="noopener noreferrer" class="test-card">
+            <div class="card-info">
+                <div class="subject-name">
+                    <span>🎨</span> 美术
+                </div>
+                <div class="duration">⏱️ 20分钟 · 审美创想</div>
+            </div>
+            <div class="arrow-icon">➡️</div>
+        </a>
+
+        <!-- 7. 劳动（20分钟） 保留# -->
+        <a href="https://ks.wjx.com/vm/wamJMSB.aspx#" target="_blank" rel="noopener noreferrer" class="test-card">
+            <div class="card-info">
+                <div class="subject-name">
+                    <span>🧹</span> 劳动
+                </div>
+                <div class="duration">⏱️ 20分钟 · 实践能手</div>
+            </div>
+            <div class="arrow-icon">➡️</div>
+        </a>
+
+        <!-- 8. 德育（20分钟） 按照原链接 -->
+        <a href="https://ks.wjx.com/vm/eUl5E3t.aspx" target="_blank" rel="noopener noreferrer" class="test-card">
+            <div class="card-info">
+                <div class="subject-name">
+                    <span>⭐</span> 德育
+                </div>
+                <div class="duration">⏱️ 20分钟 · 品格成长</div>
+            </div>
+            <div class="arrow-icon">➡️</div>
+        </a>
+    </div>
+
+    <div class="info-footer">
+        <span>✨</span> 温馨提示：点击任意卡片将在新标签页打开测试卷，可合理安排时间逐科练习
+        <span>✨</span>
+    </div>
+    <!-- 附加的轻量级说明，所有链接均来自官方问卷星平台，请放心使用 -->
+    <div style="text-align: center; margin-top: 1.2rem; font-size: 0.7rem; opacity: 0.7; color: #5f6f8a;">
+        🧭 建议使用电脑 / 平板 / 手机浏览器 | 每个科目独立计时，祝学业进步
+    </div>
+</div>
+</body>
+</html>
