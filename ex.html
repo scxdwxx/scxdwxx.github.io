@@ -354,8 +354,8 @@
                 ALL_CLASSES.push('二（' + i + '）班');
             }
 
-            // 排除 2班 和 7班 （索引 1 和 6）
-            const EXCLUDED_INDEXES = [1, 6]; // 二（2）班, 二（7）班
+         
+            const EXCLUDED_INDEXES = [1, 5]; 
             const AVAILABLE_CLASSES = ALL_CLASSES.filter((_, idx) => !EXCLUDED_INDEXES.includes(idx));
 
             // ---------- DOM 引用 ----------
